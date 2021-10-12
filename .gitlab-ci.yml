@@ -1,0 +1,20 @@
+image: java:8-jdk
+stages:
+  - test
+  - build
+maven-test:
+  image: maven:3-jdk-8
+  stage: test
+  script: 'mvn test'
+maven-build:
+  image: maven:3-jdk-8
+  stage: build
+  script: 'mvn package'
+services:
+  - 'mysql:latest'
+  - 'mongo:latest'
+variables:
+  MYSQL_ROOT_PASSWORD: dockerpassword
+  MYSQL_MYURL: jdbc:mysql://localhost:3306/userservice?createDatabaseIfNotExist=true&user=root&password=dockerpassword
+  MYSQL_HOST: localhost
+  MONGO_URI: mongodb://localhost:27017/favbook

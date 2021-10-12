@@ -1,0 +1,5 @@
+FROM java:8-jre
+WORKDIR usr/src
+Add ./target/favouriteservice-1.0.jar /usr/src/favouriteservice-1.0.jar
+ENV MONGO_URI=mongodb://localhost:27017/favbook
+ENTRYPOINT ["java","-jar","favouriteservice-1.0.jar"]

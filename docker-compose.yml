@@ -1,0 +1,51 @@
+version: '3.6'
+services:
+  eureka-server:
+    image: bhargaviv/mybook-eurekaserviceimg     
+    ports:
+      - 8761:8761
+      
+  mysql:
+   image: mysql:latest
+   ports: 
+     - 3307:3306
+   environment:
+      MYSQL_MYURL: jdbc:mysql://host.docker.internal:3306/userservice?createDatabaseIfNotExist=true&user=root&password=admin
+      MYSQL_ROOT_PASSWORD: root     
+    
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017     
+    
+  favbookservice:
+    image: bhargaviv/mybook-favbookimg   
+    ports:
+      - 9097:9097
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: mongodb://host.docker.internal:27017/favbook
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+      
+      
+  userservice:
+    image: bhargaviv/mybook-userserviceimg    
+    ports:
+      - 9098:9098
+    depends_on:
+      - mysql      
+    environment:
+      MYSQL_MYURL: jdbc:mysql://host.docker.internal:3306/userservice?createDatabaseIfNotExist=true&user=root&password=admin
+      MYSQL_ROOT_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+     
+
+      
+  uireact:
+    image: bhargaviv/mybook-reactimg  
+    ports:
+      - 3000:3000
+   
+      
+ 
